@@ -15,7 +15,9 @@ import {
   ChevronUp,
   Zap,
   Image as ImageIcon,
-  Trash2
+  Trash2,
+  Share2,
+  Play,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -430,6 +432,61 @@ function App() {
       toast.success('تم النسخ إلى الحافظة')
     })
   }
+
+  const getAyahShareText = (ayah: Ayah) =>
+    `${ayah.text}\n\n${ayah.surah.name} - الآية ${ayah.number}\n#QuranAyahExperience`
+
+  const shareFavorite = async (fav: Favorite) => {
+    const text = getAyahShareText(fav.ayah)
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Quran Ayah',
+          text,
+        })
+        toast.success('تمت المشاركة')
+        return
+      }
+
+      await navigator.clipboard.writeText(text)
+      toast.success('تم نسخ نص المشاركة')
+    } catch {
+      toast.error('تعذر مشاركة الآية')
+    }
+  }
+
+  const playFavorite = useCallback(
+    async (fav: Favorite) => {
+      const ayah = fav.ayah
+
+      setAudioError(false)
+      setAudioErrorMessage('')
+
+      setCurrentAyah(ayah)
+
+      // Try to reuse the current reciter first, then fallback through others.
+      const resolvedAudio = await resolveAudioSource(ayah.number, currentReciter)
+      if (!resolvedAudio) {
+        setAudioError(true)
+        setAudioErrorMessage('تعذر تشغيل الصوت من API لهذه الآية')
+        toast.error('تعذر تشغيل الصوت من API لهذه الآية')
+        return
+      }
+
+      setCurrentReciter(resolvedAudio.reciter)
+      setUsedReciters((prev) => [...prev, resolvedAudio.reciter.identifier])
+      setAudioUrl(resolvedAudio.url)
+
+      // Give the <audio> element time to load the new src.
+      setTimeout(() => {
+        if (audioRef.current && !muted) {
+          audioRef.current.play().catch(() => {})
+        }
+      }, 400)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [resolveAudioSource, currentReciter, muted]
+  )
   
   // Generate ayah image
   const generateAyahImage = () => {
@@ -915,14 +972,40 @@ function App() {
                             {fav.ayah.text}
                           </p>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeFromFavorites(fav.ayah.number)}
-                          className="text-red-500 hover:text-red-600"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          {/* حذف */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeFromFavorites(fav.ayah.number)}
+                            className="rounded-full h-8 px-3 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            حذف
+                          </Button>
+
+                          {/* مشاركة */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => shareFavorite(fav)}
+                            className="rounded-full h-8 px-3"
+                          >
+                            <Share2 className="w-4 h-4" />
+                            مشاركة
+                          </Button>
+
+                          {/* نسخ */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => playFavorite(fav)}
+                            className="rounded-full h-8 px-3"
+                          >
+                            <Play className="w-4 h-4" />
+                            تشغيل
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   ))}
