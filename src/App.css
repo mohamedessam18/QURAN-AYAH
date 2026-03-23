@@ -1,0 +1,216 @@
+/* App-specific styles */
+
+/* Smooth transitions for all interactive elements */
+button, a, input, select {
+  transition: all 0.2s ease;
+}
+
+/* Custom focus styles */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid rgba(63, 125, 123, 0.5);
+  outline-offset: 2px;
+}
+
+/* Audio player styling */
+audio {
+  height: 40px;
+  border-radius: 20px;
+  background: transparent;
+}
+
+audio::-webkit-media-controls-panel {
+  background: transparent;
+}
+
+audio::-webkit-media-controls-play-button,
+audio::-webkit-media-controls-pause-button {
+  background-color: #3F7D7B;
+  border-radius: 50%;
+}
+
+/* Dialog styling */
+[role="dialog"] {
+  animation: dialog-enter 0.3s ease-out;
+}
+
+@keyframes dialog-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Button hover effects */
+.btn-pill {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.btn-pill:hover::after {
+  transform: translateX(100%);
+}
+
+/* Card hover effect */
+.card-shadow {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 60px rgba(0,0,0,0.12);
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* Slide up animation */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out;
+}
+
+/* Pulse ring animation */
+@keyframes pulse-ring {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 3.5s ease-in-out infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .card-shadow {
+    border-radius: 20px;
+  }
+  
+  .glow-ring {
+    filter: drop-shadow(0 0 12px rgba(63,125,123,0.3));
+  }
+}
+
+/* Dark mode adjustments */
+.dark .card-shadow {
+  box-shadow: 0 18px 50px rgba(0,0,0,0.3);
+}
+
+.dark .glow-ring {
+  filter: drop-shadow(0 0 18px rgba(63,125,123,0.5));
+}
+
+.ayah-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(63, 125, 123, 0.45) transparent;
+  overscroll-behavior: contain;
+}
+
+.ayah-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.ayah-scroll::-webkit-scrollbar-thumb {
+  background: rgba(63, 125, 123, 0.45);
+  border-radius: 8px;
+}
+
+/* Scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(63, 125, 123, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(63, 125, 123, 0.5);
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(63, 125, 123, 0.3);
+  color: inherit;
+}
+
+/* Prevent text selection on buttons */
+button {
+  user-select: none;
+}
+
+/* Ensure proper RTL layout */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] .space-x-2 > * + * {
+  --tw-space-x-reverse: 1;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+  --tw-space-x-reverse: 1;
+}
