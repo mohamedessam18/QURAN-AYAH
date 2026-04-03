@@ -57,6 +57,15 @@ interface Translation {
   language: string
 }
 
+type SupportedLanguage = 'ar' | 'en' | 'id' | 'es'
+
+interface LanguageConfig {
+  code: SupportedLanguage
+  label: string
+  dir: 'rtl' | 'ltr'
+  translationEdition: string
+}
+
 // Reciters list (20+ reciters)
 const RECITERS: Reciter[] = [
   { identifier: 'ar.alafasy', name: 'مشاري العفاسي', language: 'ar' },
@@ -98,11 +107,264 @@ const REFLECTION_PROMPTS = [
   'كيف تساعدك هذه الآية في التعامل مع تحدياتك؟',
 ]
 
+const REFLECTION_PROMPTS_BY_LANGUAGE: Record<SupportedLanguage, string[]> = {
+  ar: [
+    'ماذا تفهم من هذه الآية؟',
+    'كيف تطبق هذه الآية في حياتك؟',
+    'ما الدرس الذي يمكنك استخلاصه من هذه الآية؟',
+    'كيف تؤثر هذه الآية في قلبك؟',
+  ],
+  en: [
+    'What do you understand from this ayah?',
+    'How can you apply this ayah in your life?',
+    'What lesson do you take from this ayah?',
+    'How does this ayah move your heart?',
+  ],
+  id: [
+    'Apa yang kamu pahami dari ayat ini?',
+    'Bagaimana kamu menerapkan ayat ini dalam hidupmu?',
+    'Pelajaran apa yang kamu ambil dari ayat ini?',
+    'Bagaimana ayat ini menyentuh hatimu?',
+  ],
+  es: [
+    '¿Qué entiendes de esta aleya?',
+    '¿Cómo puedes aplicar esta aleya en tu vida?',
+    '¿Qué enseñanza tomas de esta aleya?',
+    '¿Cómo toca esta aleya tu corazón?',
+  ],
+}
+
 const SEO_TITLE = 'Quran Ayah Experience | Random Quran Verses, Tafsir and Audio Recitation'
 const SEO_DESCRIPTION =
   'Discover random Quran verses with Arabic text, English translation, tafsir, and audio recitation by multiple reciters in a calm reflection experience.'
 const SEO_KEYWORDS =
   'Quran verses, random ayah, Quran audio, Quran recitation, tafsir, Quran translation, Quran reflection, Islamic app'
+
+const SUPPORTED_LANGUAGES: LanguageConfig[] = [
+  { code: 'ar', label: 'العربية', dir: 'rtl', translationEdition: 'ar.muyassar' },
+  { code: 'en', label: 'English', dir: 'ltr', translationEdition: 'en.sahih' },
+  { code: 'id', label: 'Bahasa Indonesia', dir: 'ltr', translationEdition: 'id.indonesian' },
+  { code: 'es', label: 'Español', dir: 'ltr', translationEdition: 'es.cortes' },
+]
+
+const LANGUAGE_INDEX = Object.fromEntries(SUPPORTED_LANGUAGES.map((lang, index) => [lang.code, index])) as Record<SupportedLanguage, number>
+
+const UI_TEXT: Record<
+  SupportedLanguage,
+  {
+    seoIntro: string
+    quranAyah: string
+    allowAudio: string
+    start: string
+    later: string
+    language: string
+    nextLanguage: string
+    loadingAyah: string
+    reciter: string
+    newAyah: string
+    saved: string
+    save: string
+    favorites: string
+    auto: string
+    tafsir: string
+    translation: string
+    copy: string
+    image: string
+    reflection: string
+    footerPrimary: string
+    footerSecondary: string
+    settings: string
+    fontSize: string
+    fontSmall: string
+    fontMedium: string
+    fontLarge: string
+    quranFont: string
+    autoInterval: string
+    seconds: string
+    savedAyat: string
+    noFavorites: string
+    remove: string
+    share: string
+    play: string
+    translatedTo: string
+  }
+> = {
+  ar: {
+    seoIntro: 'اقرأ واستمع إلى آيات قرآنية عشوائية مع النص العربي والترجمة والتفسير والتلاوة في تجربة هادئة للتدبر.',
+    quranAyah: 'آية قرآنية',
+    allowAudio: 'اضغط للسماح بالصوت ثم ابدأ',
+    start: 'ابدأ',
+    later: 'لاحقًا',
+    language: 'اللغة',
+    nextLanguage: 'اللغة التالية',
+    loadingAyah: 'اضغط على الزر لعرض آية',
+    reciter: 'القارئ',
+    newAyah: 'إظهار آية جديدة',
+    saved: 'محفوظ',
+    save: 'حفظ',
+    favorites: 'المفضلة',
+    auto: 'تلقائي',
+    tafsir: 'تفسير',
+    translation: 'ترجمة',
+    copy: 'نسخ',
+    image: 'صورة',
+    reflection: 'تدبر',
+    footerPrimary: 'تجربة آية قرآنية - لحظة هدوء وتدبر',
+    footerSecondary: 'Quran Ayah Experience - a quiet moment of reflection',
+    settings: 'الإعدادات',
+    fontSize: 'حجم الخط',
+    fontSmall: 'صغير',
+    fontMedium: 'متوسط',
+    fontLarge: 'كبير',
+    quranFont: 'خط القرآن',
+    autoInterval: 'فترة التشغيل التلقائي',
+    seconds: 'ثانية',
+    savedAyat: 'الآيات المحفوظة',
+    noFavorites: 'لا توجد آيات محفوظة',
+    remove: 'حذف',
+    share: 'مشاركة',
+    play: 'تشغيل',
+    translatedTo: 'الترجمة الحالية',
+  },
+  en: {
+    seoIntro: 'Read and listen to random Quran verses with Arabic text, translation, tafsir, and recitation audio in a focused spiritual reflection experience.',
+    quranAyah: 'Quran Ayah',
+    allowAudio: 'Tap to allow audio, then begin',
+    start: 'Start',
+    later: 'Later',
+    language: 'Language',
+    nextLanguage: 'Next language',
+    loadingAyah: 'Tap the button to show an ayah',
+    reciter: 'Reciter',
+    newAyah: 'Show a New Ayah',
+    saved: 'Saved',
+    save: 'Save',
+    favorites: 'Favorites',
+    auto: 'Auto',
+    tafsir: 'Tafsir',
+    translation: 'Translation',
+    copy: 'Copy',
+    image: 'Image',
+    reflection: 'Reflection',
+    footerPrimary: 'Quran Ayah Experience - a quiet moment of reflection',
+    footerSecondary: 'Arabic ayah with translation, recitation, and tafsir',
+    settings: 'Settings',
+    fontSize: 'Font Size',
+    fontSmall: 'Small',
+    fontMedium: 'Medium',
+    fontLarge: 'Large',
+    quranFont: 'Quran Font',
+    autoInterval: 'Auto mode interval',
+    seconds: 'seconds',
+    savedAyat: 'Saved Ayat',
+    noFavorites: 'No saved ayat yet',
+    remove: 'Remove',
+    share: 'Share',
+    play: 'Play',
+    translatedTo: 'Current translation',
+  },
+  id: {
+    seoIntro: 'Baca dan dengarkan ayat Al-Quran acak dengan teks Arab, terjemahan, tafsir, dan audio tilawah dalam pengalaman refleksi yang tenang.',
+    quranAyah: 'Ayat Al-Quran',
+    allowAudio: 'Ketuk untuk mengizinkan audio lalu mulai',
+    start: 'Mulai',
+    later: 'Nanti',
+    language: 'Bahasa',
+    nextLanguage: 'Bahasa berikutnya',
+    loadingAyah: 'Ketuk tombol untuk menampilkan ayat',
+    reciter: 'Qari',
+    newAyah: 'Tampilkan Ayat Baru',
+    saved: 'Tersimpan',
+    save: 'Simpan',
+    favorites: 'Favorit',
+    auto: 'Otomatis',
+    tafsir: 'Tafsir',
+    translation: 'Terjemahan',
+    copy: 'Salin',
+    image: 'Gambar',
+    reflection: 'Renungan',
+    footerPrimary: 'Pengalaman Ayat Al-Quran - momen tenang untuk merenung',
+    footerSecondary: 'Ayat Arab dengan terjemahan, audio, dan tafsir',
+    settings: 'Pengaturan',
+    fontSize: 'Ukuran Font',
+    fontSmall: 'Kecil',
+    fontMedium: 'Sedang',
+    fontLarge: 'Besar',
+    quranFont: 'Font Quran',
+    autoInterval: 'Interval mode otomatis',
+    seconds: 'detik',
+    savedAyat: 'Ayat Tersimpan',
+    noFavorites: 'Belum ada ayat tersimpan',
+    remove: 'Hapus',
+    share: 'Bagikan',
+    play: 'Putar',
+    translatedTo: 'Terjemahan saat ini',
+  },
+  es: {
+    seoIntro: 'Lee y escucha aleyas aleatorias del Corán con texto árabe, traducción, tafsir y recitación en una experiencia serena de reflexión.',
+    quranAyah: 'Aleya del Corán',
+    allowAudio: 'Toca para permitir el audio y luego empieza',
+    start: 'Empezar',
+    later: 'Más tarde',
+    language: 'Idioma',
+    nextLanguage: 'Siguiente idioma',
+    loadingAyah: 'Toca el botón para mostrar una aleya',
+    reciter: 'Recitador',
+    newAyah: 'Mostrar una Nueva Aleya',
+    saved: 'Guardada',
+    save: 'Guardar',
+    favorites: 'Favoritas',
+    auto: 'Auto',
+    tafsir: 'Tafsir',
+    translation: 'Traducción',
+    copy: 'Copiar',
+    image: 'Imagen',
+    reflection: 'Reflexión',
+    footerPrimary: 'Quran Ayah Experience - un momento de calma y reflexión',
+    footerSecondary: 'Aleya árabe con traducción, recitación y tafsir',
+    settings: 'Configuración',
+    fontSize: 'Tamaño de fuente',
+    fontSmall: 'Pequeña',
+    fontMedium: 'Mediana',
+    fontLarge: 'Grande',
+    quranFont: 'Fuente del Corán',
+    autoInterval: 'Intervalo del modo automático',
+    seconds: 'segundos',
+    savedAyat: 'Aleyas guardadas',
+    noFavorites: 'Todavía no hay aleyas guardadas',
+    remove: 'Eliminar',
+    share: 'Compartir',
+    play: 'Reproducir',
+    translatedTo: 'Traducción actual',
+  },
+}
+
+const LANGUAGE_BY_COUNTRY: Record<string, SupportedLanguage> = {
+  EG: 'ar', SA: 'ar', AE: 'ar', QA: 'ar', KW: 'ar', BH: 'ar', OM: 'ar', JO: 'ar', PS: 'ar',
+  LB: 'ar', SY: 'ar', IQ: 'ar', YE: 'ar', LY: 'ar', TN: 'ar', DZ: 'ar', MA: 'ar', MR: 'ar',
+  SD: 'ar', SO: 'ar', DJ: 'ar', KM: 'ar',
+  US: 'en', GB: 'en', CA: 'en', AU: 'en', NZ: 'en', NG: 'en', KE: 'en', IN: 'en', PK: 'en',
+  ID: 'id',
+  ES: 'es', MX: 'es', AR: 'es', CO: 'es', PE: 'es', CL: 'es', VE: 'es', EC: 'es', BO: 'es', UY: 'es', PY: 'es', DO: 'es', GT: 'es', HN: 'es', SV: 'es', NI: 'es', CR: 'es', PA: 'es', CU: 'es',
+}
+
+const detectPreferredLanguage = (): SupportedLanguage => {
+  if (typeof window === 'undefined') return 'ar'
+
+  const saved = window.localStorage.getItem('quran-ui-language') as SupportedLanguage | null
+  if (saved && saved in LANGUAGE_INDEX) return saved
+
+  const locale = navigator.language || 'ar'
+  const [langPart, regionPart] = locale.split('-')
+  const lang = langPart.toLowerCase()
+  const region = regionPart?.toUpperCase()
+
+  if (region && LANGUAGE_BY_COUNTRY[region]) return LANGUAGE_BY_COUNTRY[region]
+  if (lang === 'ar') return 'ar'
+  if (lang === 'id') return 'id'
+  if (lang === 'es') return 'es'
+  return 'en'
+}
 
 function App() {
   // State
@@ -129,6 +391,10 @@ function App() {
   const [muted, setMuted] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [usedReciters, setUsedReciters] = useState<string[]>([])
+  const [uiLanguage, setUiLanguage] = useState<SupportedLanguage>(detectPreferredLanguage)
+  const currentLanguageConfig = SUPPORTED_LANGUAGES[LANGUAGE_INDEX[uiLanguage]]
+  const ui = UI_TEXT[uiLanguage]
+  const isRtl = currentLanguageConfig.dir === 'rtl'
   
   // Refs
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -140,8 +406,10 @@ function App() {
 
   useEffect(() => {
     document.title = SEO_TITLE
-    document.documentElement.lang = 'ar'
-    document.documentElement.dir = 'rtl'
+    const currentLanguage = SUPPORTED_LANGUAGES[LANGUAGE_INDEX[uiLanguage]]
+    document.documentElement.lang = currentLanguage.code
+    document.documentElement.dir = currentLanguage.dir
+    window.localStorage.setItem('quran-ui-language', currentLanguage.code)
 
     const ensureMeta = (name: string, content: string, attribute: 'name' | 'property' = 'name') => {
       let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${name}"]`)
@@ -191,7 +459,7 @@ function App() {
       document.head.appendChild(script)
     }
     script.textContent = JSON.stringify(jsonLd)
-  }, [])
+  }, [uiLanguage])
   
   // Load preferences from localStorage
   useEffect(() => {
@@ -272,6 +540,24 @@ function App() {
     return data.data.audio as string
   }, [])
 
+  const fetchTranslation = useCallback(async (ayahNumber: number, language: SupportedLanguage) => {
+    const edition = SUPPORTED_LANGUAGES[LANGUAGE_INDEX[language]].translationEdition
+    const response = await fetch(`https://api.alquran.cloud/v1/ayah/${ayahNumber}/${edition}`)
+    if (!response.ok) {
+      throw new Error(`TRANSLATION_ERROR_${response.status}`)
+    }
+
+    const data = await response.json()
+    if (data.code !== 200 || !data.data?.text) {
+      throw new Error('TRANSLATION_NOT_FOUND')
+    }
+
+    return {
+      text: data.data.text as string,
+      language,
+    }
+  }, [])
+
   const resolveAudioSource = useCallback(async (ayahNumber: number, preferredReciter?: Reciter, excludedReciterId?: string) => {
     const remaining = RECITERS.filter(
       (reciter) =>
@@ -344,16 +630,15 @@ function App() {
           toast.error('تعذر تحميل الصوت من API لهذه الآية حاليًا')
         }
         
-        const transResponse = await fetch(`https://api.alquran.cloud/v1/ayah/${randomAyahNumber}/en.sahih`)
-        const transData = await transResponse.json()
-        if (transData.code === 200 && transData.data) {
-          setTranslation({
-            text: transData.data.text,
-            language: 'en'
-          })
+        try {
+          const nextTranslation = await fetchTranslation(randomAyahNumber, uiLanguage)
+          setTranslation(nextTranslation)
+        } catch {
+          setTranslation(null)
         }
         
-        setCurrentPrompt(REFLECTION_PROMPTS[Math.floor(Math.random() * REFLECTION_PROMPTS.length)])
+        const prompts = REFLECTION_PROMPTS_BY_LANGUAGE[uiLanguage] ?? REFLECTION_PROMPTS
+        setCurrentPrompt(prompts[Math.floor(Math.random() * prompts.length)])
         
         setTimeout(() => {
           if (audioRef.current && !muted && resolvedAudio) {
@@ -367,7 +652,7 @@ function App() {
     } finally {
       setIsLoading(false)
     }
-  }, [isLoading, muted, resolveAudioSource, usedReciters])
+  }, [fetchTranslation, isLoading, muted, resolveAudioSource, uiLanguage, usedReciters])
 
   // Fit the ايه placeholder height so the full verse is visible without scrolling.
   useEffect(() => {
@@ -417,6 +702,37 @@ function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAyah?.number, fontSize, quranFont])
+
+  useEffect(() => {
+    if (!currentAyah) return
+
+    let cancelled = false
+
+    const loadTranslation = async () => {
+      try {
+        const nextTranslation = await fetchTranslation(currentAyah.number, uiLanguage)
+        if (!cancelled) {
+          setTranslation(nextTranslation)
+        }
+      } catch {
+        if (!cancelled) {
+          setTranslation(null)
+        }
+      }
+    }
+
+    void loadTranslation()
+
+    return () => {
+      cancelled = true
+    }
+  }, [currentAyah, fetchTranslation, uiLanguage])
+
+  useEffect(() => {
+    if (!currentAyah) return
+    const prompts = REFLECTION_PROMPTS_BY_LANGUAGE[uiLanguage] ?? REFLECTION_PROMPTS
+    setCurrentPrompt(prompts[Math.floor(Math.random() * prompts.length)])
+  }, [currentAyah, uiLanguage])
   
   // Handle audio error - fallback to another reciter
   const handleAudioError = useCallback(async () => {
@@ -640,8 +956,15 @@ function App() {
     toast.success('تمت الإزالة من المفضلة')
   }
   
+  const cycleLanguage = () => {
+    setUiLanguage((current) => {
+      const nextIndex = (LANGUAGE_INDEX[current] + 1) % SUPPORTED_LANGUAGES.length
+      return SUPPORTED_LANGUAGES[nextIndex].code
+    })
+  }
+
   return (
-    <div dir="rtl" className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
+    <div dir={isRtl ? 'rtl' : 'ltr'} className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
       <div className="min-h-screen bg-offwhite dark:bg-gray-900 transition-colors duration-300">
         <div className="grain-overlay" />
         <Toaster position="top-center" richColors />
@@ -663,22 +986,20 @@ function App() {
                 </div>
               </div>
               
-              <p className="heading-en text-xs text-gray-500 dark:text-gray-400 mb-4 tracking-widest">QURAN AYAH</p>
+              <p className="heading-en text-xs text-gray-500 dark:text-gray-400 mb-4 tracking-widest">{ui.quranAyah}</p>
               
               <h2 className="text-3xl font-amiri text-gray-900 dark:text-white mb-4 leading-relaxed">
                 صَلِّ عَلَىٰ سَيِّدِنَا مُحَمَّدٍ
               </h2>
               
-              <p className="arabic-ui text-gray-600 dark:text-gray-300 mb-8">
-                اضغط للسماح بالصوت ثم ابدأ
-              </p>
+              <p className="arabic-ui text-gray-600 dark:text-gray-300 mb-8">{ui.allowAudio}</p>
               
               <div className="flex flex-col gap-3">
                 <Button onClick={handleWelcomeClose} className="btn-pill bg-teal-600 hover:bg-teal-700 text-white">
-                  ابدأ
+                  {ui.start}
                 </Button>
                 <Button variant="ghost" onClick={handleWelcomeClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400">
-                  لاحقًا
+                  {ui.later}
                 </Button>
               </div>
             </div>
@@ -692,10 +1013,19 @@ function App() {
             <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4">
               <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <span className="heading-en text-xs text-teal-700/80 dark:text-teal-300/80 tracking-widest bg-white/70 dark:bg-gray-800/70 px-3 py-1.5 rounded-full border border-teal-100 dark:border-gray-700 backdrop-blur-sm">
-                  QURAN AYAH
+                  {ui.quranAyah}
                 </span>
                 
                 <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    onClick={cycleLanguage}
+                    className="rounded-full bg-white/85 dark:bg-gray-800/85 backdrop-blur-sm shadow-sm hover:shadow-md px-3 text-xs font-medium"
+                    title={ui.nextLanguage}
+                  >
+                    <Globe className="w-4 h-4 ml-2" />
+                    {currentLanguageConfig.label}
+                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"
@@ -731,10 +1061,10 @@ function App() {
               <div className="w-full max-w-3xl">
                 <section className="mb-6 text-center">
                   <h1 className="text-3xl md:text-4xl font-amiri text-gray-900 dark:text-white mb-3 leading-relaxed">
-                    Quran Ayah Experience
+                    {ui.quranAyah}
                   </h1>
                   <p className="max-w-2xl mx-auto text-sm md:text-base text-gray-600 dark:text-gray-300 leading-7">
-                    Read and listen to random Quran verses with Arabic text, English translation, tafsir, and recitation audio in a focused spiritual reflection experience.
+                    {ui.seoIntro}
                   </p>
                 </section>
 
@@ -762,7 +1092,7 @@ function App() {
                           {currentAyah.text}
                         </p>
                       ) : (
-                        <p className="text-gray-400 arabic-ui">اضغط على الزر لعرض آية</p>
+                        <p className="text-gray-400 arabic-ui">{ui.loadingAyah}</p>
                       )}
                     </div>
                   </div>
@@ -770,7 +1100,7 @@ function App() {
                   {/* Reciter Info */}
                   {currentAyah && (
                     <p className="text-center text-sm text-gray-500 dark:text-gray-400 mb-6 arabic-ui">
-                      القارئ: {currentReciter.name}
+                      {ui.reciter}: {currentReciter.name}
                     </p>
                   )}
                   
@@ -804,7 +1134,7 @@ function App() {
                       ) : (
                         <>
                           <RefreshCw className="w-5 h-5 ml-2" />
-                          إظهار آية جديدة
+                          {ui.newAyah}
                         </>
                       )}
                     </Button>
@@ -817,7 +1147,7 @@ function App() {
                           className={`btn-pill ${isFavorite ? 'bg-red-50 text-red-500 border-red-200 dark:bg-red-500/10 dark:border-red-500/30' : ''}`}
                         >
                           <Heart className={`w-5 h-5 ml-2 ${isFavorite ? 'fill-current' : ''}`} />
-                          {isFavorite ? 'محفوظ' : 'حفظ'}
+                          {isFavorite ? ui.saved : ui.save}
                         </Button>
                         
                         <Button
@@ -826,7 +1156,7 @@ function App() {
                           className="btn-pill"
                         >
                           <BookOpen className="w-5 h-5 ml-2" />
-                          المفضلة ({favorites.length})
+                          {ui.favorites} ({favorites.length})
                         </Button>
                       </>
                     )}
@@ -837,7 +1167,7 @@ function App() {
                     {/* Auto Mode */}
                     <div className="flex items-center gap-2 px-4 py-2 bg-gray-100/90 dark:bg-gray-700/90 border border-gray-200 dark:border-gray-600 rounded-full">
                       <Zap className="w-4 h-4 text-teal-600" />
-                      <span className="text-sm arabic-ui">تلقائي</span>
+                      <span className="text-sm arabic-ui">{ui.auto}</span>
                       <Switch checked={autoMode} onCheckedChange={setAutoMode} />
                     </div>
                     
@@ -850,7 +1180,7 @@ function App() {
                         className="rounded-full"
                       >
                         <BookOpen className="w-4 h-4 ml-1" />
-                        تفسير
+                        {ui.tafsir}
                         {showTafsir ? <ChevronUp className="w-4 h-4 mr-1" /> : <ChevronDown className="w-4 h-4 mr-1" />}
                       </Button>
                     )}
@@ -864,7 +1194,7 @@ function App() {
                         className="rounded-full"
                       >
                         <Globe className="w-4 h-4 ml-1" />
-                        ترجمة
+                        {ui.translation}
                         {showTranslation ? <ChevronUp className="w-4 h-4 mr-1" /> : <ChevronDown className="w-4 h-4 mr-1" />}
                       </Button>
                     )}
@@ -878,7 +1208,7 @@ function App() {
                         className="rounded-full"
                       >
                         <Copy className="w-4 h-4 ml-1" />
-                        نسخ
+                        {ui.copy}
                       </Button>
                     )}
                     
@@ -891,7 +1221,7 @@ function App() {
                         className="rounded-full"
                       >
                         <ImageIcon className="w-4 h-4 ml-1" />
-                        صورة
+                        {ui.image}
                       </Button>
                     )}
                   </div>
@@ -901,7 +1231,7 @@ function App() {
                     <div className="mt-6 p-4 bg-teal-50 dark:bg-teal-900/20 rounded-2xl animate-fade-in">
                       <h3 className="text-teal-700 dark:text-teal-400 font-semibold mb-2 arabic-ui flex items-center">
                         <BookOpen className="w-5 h-5 ml-2" />
-                        التفسير
+                        {ui.tafsir}
                       </h3>
                       <p className="text-gray-700 dark:text-gray-300 arabic-ui leading-relaxed">
                         {getTafsir()}
@@ -914,8 +1244,11 @@ function App() {
                     <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl animate-fade-in">
                       <h3 className="text-blue-700 dark:text-blue-400 font-semibold mb-2 flex items-center">
                         <Globe className="w-5 h-5 ml-2" />
-                        Translation
+                        {ui.translation}
                       </h3>
+                      <p className="text-xs text-blue-600 dark:text-blue-300 mb-2">
+                        {ui.translatedTo}: {currentLanguageConfig.label}
+                      </p>
                       <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                         {translation.text}
                       </p>
@@ -925,7 +1258,7 @@ function App() {
                   {/* Reflection Prompt */}
                   {currentAyah && currentPrompt && (
                     <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
-                      <p className="text-purple-700 dark:text-purple-400 text-sm mb-2 arabic-ui">تدبر</p>
+                      <p className="text-purple-700 dark:text-purple-400 text-sm mb-2 arabic-ui">{ui.reflection}</p>
                       <p className="text-gray-800 dark:text-gray-200 arabic-ui text-lg">
                         {currentPrompt}
                       </p>
@@ -951,12 +1284,8 @@ function App() {
             {/* Footer */}
             <footer className="py-8 px-4 border-t border-gray-200 dark:border-gray-800">
               <div className="max-w-7xl mx-auto text-center">
-                <p className="text-sm text-gray-500 dark:text-gray-400 arabic-ui">
-                  تجربة آية قرآنية — لحظة هدوء وتدبر
-                </p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                  Quran Ayah Experience — a quiet moment of reflection
-                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 arabic-ui">{ui.footerPrimary}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">{ui.footerSecondary}</p>
               </div>
             </footer>
           </div>
@@ -966,13 +1295,13 @@ function App() {
         <Dialog open={showSettings} onOpenChange={setShowSettings}>
           <DialogContent className="sm:max-w-md bg-white dark:bg-gray-800 rounded-3xl">
             <DialogHeader>
-              <DialogTitle className="arabic-ui text-right">الإعدادات</DialogTitle>
+              <DialogTitle className="arabic-ui text-right">{ui.settings}</DialogTitle>
             </DialogHeader>
             
             <div className="space-y-6 py-4">
               {/* Font Size */}
               <div>
-                <Label className="arabic-ui mb-2 block">حجم الخط</Label>
+                <Label className="arabic-ui mb-2 block">{ui.fontSize}</Label>
                 <div className="flex gap-2">
                   {(['small', 'medium', 'large'] as const).map((size) => (
                     <Button
@@ -981,9 +1310,9 @@ function App() {
                       variant={fontSize === size ? 'default' : 'outline'}
                       className="flex-1"
                     >
-                      {size === 'small' && 'صغير'}
-                      {size === 'medium' && 'متوسط'}
-                      {size === 'large' && 'كبير'}
+                      {size === 'small' && ui.fontSmall}
+                      {size === 'medium' && ui.fontMedium}
+                      {size === 'large' && ui.fontLarge}
                     </Button>
                   ))}
                 </div>
@@ -991,7 +1320,7 @@ function App() {
               
               {/* Quran Font */}
               <div>
-                <Label className="arabic-ui mb-2 block">خط القرآن</Label>
+                <Label className="arabic-ui mb-2 block">{ui.quranFont}</Label>
                 <div className="flex gap-2">
                   <Button
                     onClick={() => setQuranFont('amiri')}
@@ -1013,7 +1342,7 @@ function App() {
               {/* Auto Interval */}
               <div>
                 <Label className="arabic-ui mb-2 block">
-                  فترة التشغيل التلقائي: {autoInterval} ثانية
+                  {ui.autoInterval}: {autoInterval} {ui.seconds}
                 </Label>
                 <Slider
                   value={[autoInterval]}
@@ -1031,14 +1360,12 @@ function App() {
         <Dialog open={showFavorites} onOpenChange={setShowFavorites}>
           <DialogContent className="sm:max-w-lg bg-white dark:bg-gray-800 rounded-3xl max-h-[80vh]">
             <DialogHeader>
-              <DialogTitle className="arabic-ui text-right">الآيات المحفوظة</DialogTitle>
+              <DialogTitle className="arabic-ui text-right">{ui.savedAyat}</DialogTitle>
             </DialogHeader>
             
             <ScrollArea className="h-[50vh]">
               {favorites.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 arabic-ui">
-                  لا توجد آيات محفوظة
-                </div>
+                <div className="text-center py-8 text-gray-500 arabic-ui">{ui.noFavorites}</div>
               ) : (
                 <div className="space-y-4">
                   {favorites.map((fav) => (
@@ -1064,7 +1391,7 @@ function App() {
                             className="rounded-full h-8 px-3 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
                           >
                             <Trash2 className="w-4 h-4" />
-                            حذف
+                            {ui.remove}
                           </Button>
 
                           {/* مشاركة */}
@@ -1075,7 +1402,7 @@ function App() {
                             className="rounded-full h-8 px-3"
                           >
                             <Share2 className="w-4 h-4" />
-                            مشاركة
+                            {ui.share}
                           </Button>
 
                           {/* نسخ */}
@@ -1086,7 +1413,7 @@ function App() {
                             className="rounded-full h-8 px-3"
                           >
                             <Play className="w-4 h-4" />
-                            تشغيل
+                            {ui.play}
                           </Button>
                         </div>
                       </div>
