@@ -98,6 +98,12 @@ const REFLECTION_PROMPTS = [
   'كيف تساعدك هذه الآية في التعامل مع تحدياتك؟',
 ]
 
+const SEO_TITLE = 'Quran Ayah Experience | Random Quran Verses, Tafsir and Audio Recitation'
+const SEO_DESCRIPTION =
+  'Discover random Quran verses with Arabic text, English translation, tafsir, and audio recitation by multiple reciters in a calm reflection experience.'
+const SEO_KEYWORDS =
+  'Quran verses, random ayah, Quran audio, Quran recitation, tafsir, Quran translation, Quran reflection, Islamic app'
+
 function App() {
   // State
   const [showWelcomeModal, setShowWelcomeModal] = useState(false)
@@ -131,6 +137,61 @@ function App() {
   const versePanelRef = useRef<HTMLDivElement>(null)
   const verseTextRef = useRef<HTMLParagraphElement>(null)
   const [versePanelHeightPx, setVersePanelHeightPx] = useState<number>(220)
+
+  useEffect(() => {
+    document.title = SEO_TITLE
+    document.documentElement.lang = 'ar'
+    document.documentElement.dir = 'rtl'
+
+    const ensureMeta = (name: string, content: string, attribute: 'name' | 'property' = 'name') => {
+      let element = document.head.querySelector<HTMLMetaElement>(`meta[${attribute}="${name}"]`)
+      if (!element) {
+        element = document.createElement('meta')
+        element.setAttribute(attribute, name)
+        document.head.appendChild(element)
+      }
+      element.setAttribute('content', content)
+    }
+
+    ensureMeta('description', SEO_DESCRIPTION)
+    ensureMeta('keywords', SEO_KEYWORDS)
+    ensureMeta('og:title', SEO_TITLE, 'property')
+    ensureMeta('og:description', SEO_DESCRIPTION, 'property')
+    ensureMeta('og:url', window.location.href, 'property')
+    ensureMeta('twitter:title', SEO_TITLE)
+    ensureMeta('twitter:description', SEO_DESCRIPTION)
+
+    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+    if (!canonical) {
+      canonical = document.createElement('link')
+      canonical.rel = 'canonical'
+      document.head.appendChild(canonical)
+    }
+    canonical.href = window.location.href
+
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Quran Ayah Experience',
+      url: window.location.origin,
+      inLanguage: ['ar', 'en'],
+      description: SEO_DESCRIPTION,
+      keywords: SEO_KEYWORDS,
+      potentialAction: {
+        '@type': 'ReadAction',
+        target: [window.location.href],
+      },
+    }
+
+    let script = document.getElementById('seo-json-ld') as HTMLScriptElement | null
+    if (!script) {
+      script = document.createElement('script')
+      script.id = 'seo-json-ld'
+      script.type = 'application/ld+json'
+      document.head.appendChild(script)
+    }
+    script.textContent = JSON.stringify(jsonLd)
+  }, [])
   
   // Load preferences from localStorage
   useEffect(() => {
@@ -668,6 +729,15 @@ function App() {
             {/* Main Card */}
             <main className="flex-1 flex items-center justify-center px-4 py-20">
               <div className="w-full max-w-3xl">
+                <section className="mb-6 text-center">
+                  <h1 className="text-3xl md:text-4xl font-amiri text-gray-900 dark:text-white mb-3 leading-relaxed">
+                    Quran Ayah Experience
+                  </h1>
+                  <p className="max-w-2xl mx-auto text-sm md:text-base text-gray-600 dark:text-gray-300 leading-7">
+                    Read and listen to random Quran verses with Arabic text, English translation, tafsir, and recitation audio in a focused spiritual reflection experience.
+                  </p>
+                </section>
+
                 <div className="bg-gradient-to-b from-white/95 to-white dark:from-gray-800/95 dark:to-gray-800 rounded-[28px] card-shadow p-8 md:p-12 border border-white/70 dark:border-gray-700/70">
                   {/* ايه Panel (banner placeholder like your screenshot) */}
                   <div
@@ -861,6 +931,19 @@ function App() {
                       </p>
                     </div>
                   )}
+
+                  <section className="sr-only" aria-label="Quran Ayah Experience SEO content">
+                    <h2>Features of Quran Ayah Experience</h2>
+                    <p>
+                      Quran Ayah Experience offers random ayah discovery, Quran recitation audio, English translation,
+                      simple tafsir, favorite verses, and sharing tools for daily reflection.
+                    </p>
+                    <h2>Who this Quran website is for</h2>
+                    <p>
+                      This Quran website is designed for visitors who want to read Quran verses online, listen to reciters,
+                      reflect on ayat, and revisit saved verses in a calm interface.
+                    </p>
+                  </section>
                 </div>
               </div>
             </main>
