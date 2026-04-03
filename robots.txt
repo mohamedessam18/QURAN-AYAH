@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mohamedessam18.github.io/QURAN-AYAH/sitemap.xml
